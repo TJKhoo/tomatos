@@ -65,7 +65,10 @@ def train_init(config):
     # batcher
     batch = {}
     for split in ["train", "valid", "test"]:
-        batch[split] = tomatos.batcher.get_generator(config, split)
+        if split == "train":
+            batch[split] = tomatos.batcher.get_generator_train_balanced(config, split)
+        else:
+            batch[split] = tomatos.batcher.get_generator(config, split)
 
     # solver
     solver = tomatos.solver.setup(config, opt_pars)

@@ -37,9 +37,9 @@ def cuts(pars, data, config, validate_only):
 def events(data, config, base_weights):
     # apply selections via weights
     # you can also put the computation of selections at the preselection stage
-    btag_1 = data[:, :, config.vars.index("bool_btag_1")]
-    btag_2 = data[:, :, config.vars.index("bool_btag_2")]
-    h_m_idx = config.vars.index("h_m")
+    btag_1 = data[:, :, config.vars.index("j1_tag")]
+    btag_2 = data[:, :, config.vars.index("j2_tag")]
+    h_m_idx = config.vars.index("m_hh")
     if config.objective == "cls_var":
         h_m = tomatos.utils.inverse_min_max_scale(
             config,
@@ -49,9 +49,9 @@ def events(data, config, base_weights):
     elif config.objective == "cls_nn":
         h_m = data[:, :, h_m_idx]
 
-    SR = (110e3 < h_m) & (h_m < 130e3)
-    VR = (100e3 < h_m) & (h_m < 110e3) | (130e3 < h_m) & (h_m < 150e3)
-    CR = (80e3 < h_m) & (h_m < 100e3) | (150e3 < h_m) & (h_m < 170e3)
+    SR = (240e3 < h_m) & (h_m < 260e3)
+    VR = (225e3 < h_m) & (h_m < 240e3) | (260e3 < h_m) & (h_m < 275e3)
+    CR = (200e3 < h_m) & (h_m < 225e3) | (275e3 < h_m) & (h_m < 300e3)
 
     weights = {
         # "base_weights": base_weights,
@@ -64,11 +64,13 @@ def events(data, config, base_weights):
         "SR_btag_2_my_sf_unc_up": base_weights
         * SR
         * btag_2
-        * data[:, :, config.vars.index("my_sf_unc_up")],
+        * 1.2,
         "SR_btag_2_my_sf_unc_down": base_weights
         * SR
         * btag_2
-        * data[:, :, config.vars.index("my_sf_unc_down")],
+        * 0.8,
+        "MY_SF_UNC_1UP": 1.2,
+        "MY_SF_UNC_1DOWN": 0.8
     }
 
     return weights

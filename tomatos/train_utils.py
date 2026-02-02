@@ -180,9 +180,11 @@ def log_sharp_hists(
     logging.info("--- Nominal (binned KDE) / (Sharp hist) ---")
     for (h_key, h), (_, sharp_h) in zip(hists.items(), sharp_hists.items()):
         if config.nominal in h_key and not "STAT" in h_key:
-            # hist approx ratio
+            # hist approx ratio - protect against division by zero
             metrics["h_" + h_key + "_sharp"] = sharp_h
-            logging.info(f"{h_key.ljust(25)}: {h/sharp_h}")
+            # Use np.where to avoid inf/nan from division by very small values
+            ratio = np.where(sharp_h > 1e-10, h / sharp_h, 0.0)
+            logging.info(f"{h_key.ljust(25)}: {ratio}")
 
 
 def do_metrics_exist(config):

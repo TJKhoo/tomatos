@@ -58,6 +58,9 @@ def loss_fn(
 
         if not validate_only:
             loss_value = tomatos.constraints.penalize_loss(loss_value, hists)
+    
+    # Protect against NaN losses (can occur if histograms are empty or have zeros)
+    loss_value = jnp.where(jnp.isnan(loss_value), 1e10, loss_value)
 
     # flatten and reduces to the configured filter
     hists = tomatos.utils.filter_hists(config, hists) if filter_return_hists else hists

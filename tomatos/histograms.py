@@ -240,7 +240,7 @@ def fill_hists(
 
         # some special signal weight unc, e.g. btag sf
         hists["SR_btag_2"]["ggZH125_vvbb"]["MY_SF_UNC_1UP"] = compute_hist(
-            i=signal_idx, weights=sel_weights["SR_btag_2_my_sf_unc_up"]
+            i=signal_idx, weights=sel_weights["SR_btag_2_my_sf_unc_down"]
         )
         hists["SR_btag_2"]["ggZH125_vvbb"]["MY_SF_UNC_1DOWN"] = compute_hist(
             i=signal_idx, weights=sel_weights["SR_btag_2_my_sf_unc_down"]
