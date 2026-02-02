@@ -12,5 +12,5 @@ tests/data*.root
 tests/mc20*.root
 tests/jetjet*.root
 docs/_build
-workspace.py
+tomatos/workspace.py
 tests/
