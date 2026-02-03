@@ -14,3 +14,4 @@ tests/jetjet*.root
 docs/_build
 tomatos/workspace.py
 tests/
+*.root

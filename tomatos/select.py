@@ -3,6 +3,7 @@ from functools import partial
 import jax
 import jax.numpy as jnp
 import relaxed
+import numpy as np 
 
 import tomatos.utils
 
@@ -39,6 +40,9 @@ def events(data, config, base_weights):
     # you can also put the computation of selections at the preselection stage
     btag_1 = data[:, :, config.vars.index("j1_tag")]
     btag_2 = data[:, :, config.vars.index("j2_tag")]
+    h_mass_1 = data[:, :, config.vars.index("j1_mass")]
+    h_mass_2 = data[:, :, config.vars.index("j2_mass")]
+
     h_m_idx = config.vars.index("m_hh")
     if config.objective == "cls_var":
         h_m = tomatos.utils.inverse_min_max_scale(
@@ -49,9 +53,9 @@ def events(data, config, base_weights):
     elif config.objective == "cls_nn":
         h_m = data[:, :, h_m_idx]
 
-    SR = (240e3 < h_m) & (h_m < 260e3)
-    VR = (225e3 < h_m) & (h_m < 240e3) | (260e3 < h_m) & (h_m < 275e3)
-    CR = (200e3 < h_m) & (h_m < 225e3) | (275e3 < h_m) & (h_m < 300e3)
+    SR = np.sqrt(((h_mass_1 - 124e3) / (1500e3/h_mass_1))**2 + ((h_mass_2 - 117e3) / (1900e3/h_mass_1))**2) < 1.6e3
+    VR = np.sqrt(((h_mass_1 - 124e3) / (0.1 * np.log(h_mass_1)))**2 + ((h_mass_2 - 117e3) / (0.1 * np.log(h_mass_2)))**2) < 100e3
+    CR = np.sqrt(((h_mass_1 - 124e3) / (0.1 *np.log(h_mass_1)))**2 + ((h_mass_2 - 117e3) / (0.1 *np.log(h_mass_2)))**2) < 170e3
 
     weights = {
         # "base_weights": base_weights,
