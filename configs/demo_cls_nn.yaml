@@ -5,26 +5,33 @@ results_path: "/Users/helenasans/Desktop/Master/MasterArbeit/firstrun/"
 
 # name of NOSYS.root holding the nominal non-systematic values
 nominal: NOSYS
-tree_name: AnalysisMiniTree
+tree_name: FilteredTree
 signal_sample: "ggZH125_vvbb"
 # total events that are batched in training from all sample_sys combined
 # 1e7 with 20 vars ~1.6 GB in memory
-batch_size: 10000
+batch_size: 10_000_000
 
 # the main data array is defined by (n_samples, n_events, vars)
 vars:
   - "j1_pt"
+  - "j1_eta"
+  - "j1_phi"
+  - "j1_m"
   - "j2_pt"
+  - "j2_eta"
+  - "j2_phi"
+  - "j2_m"
+  - "h_pt"
+  - "h_eta"
+  - "h_phi"
 event_weight_var: weight
 aux_vars:
-  - "j1_tag"
-  - "j2_tag"
-  - "j1_mass"
-  - "j2_mass"
-  - "m_hh"
- 
-n_sig_events: 128
-n_bkg_events: 128
+  - "h_m"
+  - "bool_btag_1"
+  - "bool_btag_2"
+  - "my_sf_unc_up"
+  - "my_sf_unc_down"
+
 # ratio need to add up to one
 train_ratio: 0.8
 valid_ratio: 0.1
@@ -36,7 +43,7 @@ plot_inputs: True
 # might drop bce, needs some attention currently
 objective: "cls_nn"
 # you can speed up cls_var, if you only setup the var and the cut_vars in
-cls_var: "m_hh"
+cls_var: "h_m"
 
 n_bins: 5
 # includes bin edges in optimization, not necessary for cls_nn
@@ -44,8 +51,7 @@ include_bins: false
 # results folder suffix
 suffix: "demo"
 # train steps
-num_steps: 100
-# how often to print status
+num_steps: 300
 # learning rate
 lr: 0.005
 # can choose from linear_cycle, constant
@@ -54,7 +60,7 @@ lr_schedule: "linear_cycle"
 bw_init: 0.4
 bw_min: 0.001
 # slope value in the sigmoid, this is pretty sharp!
-slope: 2_000
+slope: 20_000
 # need to limit these updates to avoid gradient explosion
 update_limit_bw: 0.01
 update_limit_cuts: 0.001 # for min max scaled between (0,1)
@@ -62,7 +68,6 @@ update_limit_cuts: 0.001 # for min max scaled between (0,1)
 # cuts on vars to be optimized, keep variables either "above", "below"
 # or below, start somewhere where the cut actually does something to
 # find a gradient
-# NOTE: values must be min-max scaled between (0, 1), not raw values!
 opt_cuts:
   j1_pt:
     keep: "above" # or below

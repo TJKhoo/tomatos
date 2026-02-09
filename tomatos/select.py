@@ -72,9 +72,7 @@ def events(data, config, base_weights):
         "SR_btag_2_my_sf_unc_down": base_weights
         * SR
         * btag_2
-        * 0.8,
-        "MY_SF_UNC_1UP": 1.2,
-        "MY_SF_UNC_1DOWN": 0.8
+        * 0.8
     }
 
     return weights

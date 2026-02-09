@@ -24,6 +24,7 @@ def make_hists(
     base_weights = jnp.multiply(base_weights, cut_weights)
     # get event selections
     sel_weights = tomatos.select.events(data, config, base_weights)
+
     # fill
     hists = tomatos.histograms.fill_hists(
         pars, data, config, sel_weights, scale, validate_only
@@ -43,10 +44,12 @@ def loss_fn(
     validate_only=False,
     filter_return_hists=True,
 ):
+    
     # the main reason why not everything in here is jitted, is that the
     # config is not a jax compatible type (pytree), this will be a bit tedious
     # as in particular you have to get rid of all strings
     hists = make_hists(pars, data, config, scale, validate_only)
+    
     model, hists = tomatos.workspace.pyhf_model(hists, config)
 
     if "bce" in config.objective:

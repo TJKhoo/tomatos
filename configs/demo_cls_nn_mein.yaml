@@ -9,28 +9,21 @@ tree_name: AnalysisMiniTree
 signal_sample: "ggZH125_vvbb"
 # total events that are batched in training from all sample_sys combined
 # 1e7 with 20 vars ~1.6 GB in memory
-batch_size: 100
+batch_size: 2048
 
 # the main data array is defined by (n_samples, n_events, vars)
 vars:
   - "j1_pt"
-  - "j1_eta"
-  - "j1_phi"
-  - "j1_m"
   - "j2_pt"
-  - "j2_eta"
-  - "j2_phi"
-  - "j2_m"
-  - "h_pt"
-  - "h_eta"
-  - "h_phi"
+  - "j1_mass"
+  - "j2_mass"
 event_weight_var: weight
 aux_vars:
-  - "h_m"
-  - "bool_btag_1"
-  - "bool_btag_2"
-  - "my_sf_unc_up"
-  - "my_sf_unc_down"
+  - "j1_tag"
+  - "j2_tag"
+  - "m_hh"
+ 
+
 
 # ratio need to add up to one
 train_ratio: 0.8
@@ -43,7 +36,7 @@ plot_inputs: True
 # might drop bce, needs some attention currently
 objective: "cls_nn"
 # you can speed up cls_var, if you only setup the var and the cut_vars in
-cls_var: "h_m"
+cls_var: "m_hh"
 
 n_bins: 5
 # includes bin edges in optimization, not necessary for cls_nn
@@ -51,33 +44,35 @@ include_bins: false
 # results folder suffix
 suffix: "demo"
 # train steps
-num_steps: 300
+num_steps: 100
+# how often to print status
 # learning rate
-lr: 0.005
+lr: 0.003
 # can choose from linear_cycle, constant
 lr_schedule: "linear_cycle"
 # start and minimum value for the bandwidth adaptation
-bw_init: 0.4
-bw_min: 0.001
+bw_init: 0.25
+bw_min: 0.02
 # slope value in the sigmoid, this is pretty sharp!
-slope: 20_000
+slope: 150
 # need to limit these updates to avoid gradient explosion
-update_limit_bw: 0.01
-update_limit_cuts: 0.001 # for min max scaled between (0,1)
+update_limit_bw: 0.005
+update_limit_cuts: 0.0005 # for min max scaled between (0,1)
 
 # cuts on vars to be optimized, keep variables either "above", "below"
 # or below, start somewhere where the cut actually does something to
 # find a gradient
+# NOTE: values must be min-max scaled between (0, 1), not raw values!
 opt_cuts:
   j1_pt:
     keep: "above" # or below
-    init: 30_000
+    init: 0.3
   j2_pt:
-    keep: "above"
-    init: 20_000
+    keep: "above" 
+    init: 0.1
 
 # applies a scale factor to the histograms accordingly
-n_k_folds: 1
+n_k_folds: 0.2
 
 # skip frames by modulo for movie
 movie_batch_modulo: 1
