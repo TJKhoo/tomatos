@@ -1,7 +1,7 @@
 # top folder where ntuples live with the structure
 # ntuple_path/SAMPLE/SYSTEMATIC.root
-ntuple_path: "/Users/helenasans/Desktop/Master/MasterArbeit/tomatos/tests/files/"
-results_path: "/Users/helenasans/Desktop/Master/MasterArbeit/firstrun/"
+ntuple_path: "/Users/khoo/Work/ATLAS/Helena_Masters/prep_root"
+results_path: "/Users/khoo/Work/ATLAS/Helena_Masters/tomatos_out"
 
 # name of NOSYS.root holding the nominal non-systematic values
 nominal: NOSYS
@@ -10,7 +10,7 @@ signal_sample: "ggZH125_vvbb"
 # total events that are batched in training from all sample_sys combined
 # 1e7 with 20 vars ~1.6 GB in memory
 batch_size: 2048
-
+''
 # the main data array is defined by (n_samples, n_events, vars)
 vars:
   - "j1_pt"
