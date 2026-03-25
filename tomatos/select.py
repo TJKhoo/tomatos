@@ -40,6 +40,13 @@ def events(data, config, base_weights):
     # you can also put the computation of selections at the preselection stage
     btag_1 = data[:, :, config.vars.index("j1_tag")]
     btag_2 = data[:, :, config.vars.index("j2_tag")]
+
+    btag_1_pass = btag_1 > 0.5
+    btag_2_pass = btag_2 > 0.5
+
+    Ntag_1 = btag_1_pass | btag_2_pass
+    Ntag_2 = btag_1_pass & btag_2_pass
+
     h_mass_1 = data[:, :, config.vars.index("j1_mass")]
     h_mass_2 = data[:, :, config.vars.index("j2_mass")]
 
@@ -59,19 +66,19 @@ def events(data, config, base_weights):
 
     weights = {
         # "base_weights": base_weights,
-        "SR_btag_1": base_weights * SR * btag_1,
-        "SR_btag_2": base_weights * SR * btag_2,
-        "VR_btag_1": base_weights * VR * btag_1,
-        "VR_btag_2": base_weights * VR * btag_2,
-        "CR_btag_1": base_weights * CR * btag_1,
-        "CR_btag_2": base_weights * CR * btag_2,
+        "SR_btag_1": base_weights * SR * Ntag_1,
+        "SR_btag_2": base_weights * SR * Ntag_2,
+        "VR_btag_1": base_weights * VR * Ntag_1,
+        "VR_btag_2": base_weights * VR * Ntag_2,
+        "CR_btag_1": base_weights * CR * Ntag_1,
+        "CR_btag_2": base_weights * CR * Ntag_2,
         "SR_btag_2_my_sf_unc_up": base_weights
         * SR
-        * btag_2
+        * Ntag_2
         * 1.2,
         "SR_btag_2_my_sf_unc_down": base_weights
         * SR
-        * btag_2
+        * Ntag_2
         * 0.8
     }
 
