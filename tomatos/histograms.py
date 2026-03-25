@@ -210,7 +210,7 @@ def fill_hists(
                 hists["SR_btag_2"][sample][config.nominal] - sigma
             )
 
-        signal_idx = config.sample_sys.index("ggZH125_vvbb_NOSYS")
+        signal_idx = config.sample_sys.index(f"{config.signal_sample}_NOSYS")
         bkg_idx = config.sample_sys.index("bkg_NOSYS")
         # dedicated stat error calc for bkg estimate
         hists["SR_btag_1"]["bkg"]["NOSYS"] = compute_hist(
@@ -239,10 +239,10 @@ def fill_hists(
         )
 
         # some special signal weight unc, e.g. btag sf
-        hists["SR_btag_2"]["ggZH125_vvbb"]["MY_SF_UNC_1UP"] = compute_hist(
+        hists["SR_btag_2"][config.signal_sample]["MY_SF_UNC_1UP"] = compute_hist(
             i=signal_idx, weights=sel_weights["SR_btag_2_my_sf_unc_down"]
         )
-        hists["SR_btag_2"]["ggZH125_vvbb"]["MY_SF_UNC_1DOWN"] = compute_hist(
+        hists["SR_btag_2"][config.signal_sample]["MY_SF_UNC_1DOWN"] = compute_hist(
             i=signal_idx, weights=sel_weights["SR_btag_2_my_sf_unc_down"]
         )
 

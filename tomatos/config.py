@@ -146,10 +146,10 @@ class Setup:
         if args.debug:
             results_folder = "tomatos_debug/"
         self.model = results_folder.split("/")[0]
-        self.results_path += results_folder
+        self.results_path += f"/{results_folder}"
         self.model_path = self.results_path + "models/"
-        self.preprocess_path = self.results_path + "preprocessed/"
-        self.plot_path = self.results_path + "plots/"
+        self.preprocess_path = self.results_path + "/preprocessed/"
+        self.plot_path = self.results_path + "/plots/"
         self.gif_path = self.plot_path + "gif_images/"
 
         # make directories
