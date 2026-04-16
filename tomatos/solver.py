@@ -48,19 +48,22 @@ def setup(config, pars):
 
     # limiting bandwidth and cut updates is important to avoid gradient
     # explosion for these
-    optimizer = optax.chain(
-        optax.zero_nans(),  # if nans, zero out, otherwise opt breaks entirely
-        optax.adam(lr_schedule),
-        # optax.add_noise(eta=0.001, gamma=0.5, seed=0),
-        optax.masked(
-            optax.clip(max_delta=config.update_limit_bw),
-            mask(pars, ["bw"]),
-        ),
-        optax.masked(
-            optax.clip(max_delta=config.update_limit_cuts),
-            mask(pars, [key for key in pars.keys() if "cut_" in key]),
-        ),
-    )
+    if config.objective == "bce":
+        optimizer = optax.adam(lr_schedule)
+    else:
+        optimizer = optax.chain(
+            optax.zero_nans(),  # if nans, zero out, otherwise opt breaks entirely
+            optax.adam(lr_schedule),
+            # optax.add_noise(eta=0.001, gamma=0.5, seed=0),
+            optax.masked(
+                optax.clip(max_delta=config.update_limit_bw),
+                mask(pars, ["bw"]),
+            ),
+            optax.masked(
+                optax.clip(max_delta=config.update_limit_cuts),
+                mask(pars, [key for key in pars.keys() if "cut_" in key]),
+            ),
+        )
 
     # has_aux allows, to return additional values from loss_fn than just the
     # loss value

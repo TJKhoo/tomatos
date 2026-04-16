@@ -55,7 +55,14 @@ def loss_fn(
     if "bce" in config.objective:
         # adjist to data you want to use, lets see if anyone wants to use
         # this
-        loss_value = tomatos.train_utils.bce(ones=data[1, :, 0], zeros=data[0, :, 0])
+        from tomatos.histograms import get_nn_output
+        nn_output = get_nn_output(
+            pars,
+            data,
+            config.nn_arch,
+            config.nn_inputs_idx_end,
+        )
+        loss_value = tomatos.train_utils.bce(ones=nn_output[config.samples.index(config.signal_sample), :], zeros=nn_output[config.samples.index("bkg"), :])
     if "cls" in config.objective:
         loss_value = neos.loss_from_model(model, loss="cls")
 
