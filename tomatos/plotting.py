@@ -127,8 +127,8 @@ def loss(config, metrics):
     plt.xlabel("Batch")
     loss = r"$CL_s$" if "cls" in config.objective else "BCE"
     plt.ylabel(f"{loss} Loss")
-    train_loss_finite = metrics["train_loss"][np.isfinite(metrics["train_loss"][:])]
-    plt.ylim(top=np.max(train_loss_finite * 1.1))
+    train_loss_finite = metrics["train_loss"][np.isfinite(metrics["train_loss"][:]) & (metrics["train_loss"][:]<1e7)]
+    plt.ylim(top=np.max(train_loss_finite * 1.1),bottom=0)
     fig_finalize(config, "loss.pdf")
 
 
@@ -346,7 +346,12 @@ def movie(config, metrics):
                     current_max = np.max(y_values)
                     ymax = max(ymax, current_max)
 
-            ax.set_ylim([0, ymax])
+            do_log = True
+            if do_log:
+                plt.yscale("log")
+                ax.set_ylim([1e-3, ymax*10])
+            else:
+                ax.set_ylim([0, ymax*1.1])
             fig_finalize(
                 config,
                 name="gif_images/" + f"{i:005d}" + ".png",

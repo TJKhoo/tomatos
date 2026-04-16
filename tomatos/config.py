@@ -86,7 +86,7 @@ class Setup:
         # some global settings
         self.fit_region = "SR_btag_2"
         # hists that contain these strings will be plotted
-        self.plot_hists_filter = [self.signal_sample, "bkg_estimate"]
+        self.plot_hists_filter = [self.signal_sample, "bkg_NOSYS", "bkg_estimate"]
 
         # Create output directories
         self._setup_paths(args, yml)

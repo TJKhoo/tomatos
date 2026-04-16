@@ -113,7 +113,7 @@ def filter_hists(config, hists):
 
     filtered_hists = {}
     for h_key, h in hists.items():
-        if any([f in h_key for f in config.plot_hists_filter]):
+        if any([f in h_key for f in config.plot_hists_filter]) and config.fit_region in h_key:
             h_key = h_key.replace(f"{config.fit_region}_", "")
             filtered_hists[h_key] = h
 

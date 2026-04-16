@@ -146,11 +146,11 @@ def run(config):
         tomatos.train_utils.log_kde(
             config, metrics, opt_pars, train_data, train_sf, hists, bins
         )
+        tomatos.train_utils.log_sharp_hists(
+            opt_pars, train_data, config, train_sf, hists, metrics
+        )
 
         if "cls" in config.objective:
-            tomatos.train_utils.log_sharp_hists(
-                opt_pars, train_data, config, train_sf, hists, metrics
-            )
             tomatos.train_utils.log_bins(config, metrics, bins, infer_metrics_i)
             tomatos.train_utils.log_cuts(config, opt_pars, metrics, infer_metrics_i)
             tomatos.train_utils.log_bw(metrics, opt_pars)
