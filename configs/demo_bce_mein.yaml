@@ -34,7 +34,7 @@ plot_inputs: True
 
 # bce, cls_nn, cls_var (bins, cuts) in some variable
 # might drop bce, needs some attention currently
-objective: "cls_nn"
+objective: "bce"
 # you can speed up cls_var, if you only setup the var and the cut_vars in
 cls_var: "m_hh"
 
@@ -44,7 +44,7 @@ include_bins: false
 # results folder suffix
 suffix: "SMHH_JZ1to4_fixNtag"
 # train steps
-num_steps: 100
+num_steps: 250
 # how often to print status
 # learning rate
 lr: 0.003

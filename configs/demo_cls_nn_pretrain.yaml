@@ -23,7 +23,8 @@ aux_vars:
   - "j1_tag"
   - "j2_tag"
 
-
+# Pre-trained model
+pretrain_params: "/Users/khoo/Work/ATLAS/Helena_Masters/tomatos_out/tomatos_bce_steps_100_bins_8_SMHH_JZ1to4_fixNtag/models/epoch_best.eqx"
 
 # ratio need to add up to one
 train_ratio: 0.8
@@ -42,7 +43,7 @@ n_bins: 8
 # includes bin edges in optimization, not necessary for cls_nn
 include_bins: false
 # results folder suffix
-suffix: "SMHH_JZ1to4_fixNtag"
+suffix: "SMHH_JZ1to4_pretrain"
 # train steps
 num_steps: 100
 # how often to print status
