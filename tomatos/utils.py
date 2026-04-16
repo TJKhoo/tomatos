@@ -21,8 +21,9 @@ import tomatos.workspace
 
 
 def inverse_min_max_scale(config, arr, var_idx):
-    unscaled_arr = (arr - config.scaler_min[var_idx]) / config.scaler_scale[var_idx]
-    return unscaled_arr
+    # unscaled_arr = (arr - config.scaler_min[var_idx]) / config.scaler_scale[var_idx]
+    # return unscaled_arr
+    return (arr - config.scaler_min[var_idx]) / config.scaler_scale[var_idx]
 
 
 def to_jax_static(value, top_level=True):

@@ -41,28 +41,21 @@ def events(data, config, base_weights):
     btag_1 = data[:, :, config.vars.index("j1_tag")]
     btag_2 = data[:, :, config.vars.index("j2_tag")]
 
-    btag_1_pass = btag_1 > 0.5
-    btag_2_pass = btag_2 > 0.5
+    btag_1_pass = btag_1 > 1.
+    btag_2_pass = btag_2 > 1.
 
-    Ntag_1 = btag_1_pass | btag_2_pass
+    Ntag_1 = btag_1_pass ^ btag_2_pass # Change to XOR
     Ntag_2 = btag_1_pass & btag_2_pass
 
-    h_mass_1 = data[:, :, config.vars.index("j1_mass")]
-    h_mass_2 = data[:, :, config.vars.index("j2_mass")]
+    # h_mass_1 = data[:, :, config.vars.index("j1_mass")]
+    # h_mass_2 = data[:, :, config.vars.index("j2_mass")]
+    h_mass_1 = tomatos.utils.inverse_min_max_scale(config, data[:, :, config.vars.index("j1_mass")], config.vars.index("j1_mass"))
+    h_mass_2 = tomatos.utils.inverse_min_max_scale(config, data[:, :, config.vars.index("j2_mass")], config.vars.index("j2_mass"))
 
-    h_m_idx = config.vars.index("m_hh")
-    if config.objective == "cls_var":
-        h_m = tomatos.utils.inverse_min_max_scale(
-            config,
-            data[:, :, h_m_idx],
-            h_m_idx,
-        )
-    elif config.objective == "cls_nn":
-        h_m = data[:, :, h_m_idx]
-
-    SR = np.sqrt(((h_mass_1 - 124e3) / (1500e3/h_mass_1))**2 + ((h_mass_2 - 117e3) / (1900e3/h_mass_1))**2) < 1.6e3
-    VR = np.sqrt(((h_mass_1 - 124e3) / (0.1 * np.log(h_mass_1)))**2 + ((h_mass_2 - 117e3) / (0.1 * np.log(h_mass_2)))**2) < 100e3
-    CR = np.sqrt(((h_mass_1 - 124e3) / (0.1 *np.log(h_mass_1)))**2 + ((h_mass_2 - 117e3) / (0.1 *np.log(h_mass_2)))**2) < 170e3
+    Xhh = np.sqrt(((h_mass_1 - 120e3) / (0.1 * h_mass_1))**2 + ((h_mass_2 - 110e3) / (0.1 * h_mass_2))**2) 
+    SR = Xhh < 1.6
+    VR = (1.6 < Xhh) & (Xhh < 3.0)
+    CR = Xhh > 3.0
 
     weights = {
         # "base_weights": base_weights,

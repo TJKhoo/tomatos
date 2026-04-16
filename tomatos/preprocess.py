@@ -57,7 +57,18 @@ def fill_2d_data(config, scaler):
                 # preselection could be here
                 # ...transfer generate test files code
                 #######
-                fill_2d_and_find_scale(config, sample_sys, data, scaler)
+                # fill_2d_and_find_scale(config, sample_sys, data, scaler)
+
+                # Require at least one jet to be tagged
+                mask = (data["j1_tag"] > 2.5) | (data["j2_tag"] > 2.5)
+
+                if not mask.any():
+                    continue
+
+                filtered_data = {key: val[mask] for key, val in data.items()}
+
+                fill_2d_and_find_scale(config, sample_sys, filtered_data, scaler)
+
 
 
 def init_preprocess_md(config, max_events):
