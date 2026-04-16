@@ -32,6 +32,7 @@ def binary_cross_entropy(preds, labels):
     return -jnp.mean(labels * jnp.log(preds) + (1 - labels) * jnp.log(1 - preds))
 
 
+# Missing weights
 def bce(ones, zeros):
     labels = jnp.concatenate([jnp.ones_like(ones), jnp.zeros_like(zeros)])
     preds = jnp.concatenate((ones, zeros))

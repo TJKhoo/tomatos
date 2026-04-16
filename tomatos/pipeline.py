@@ -19,6 +19,7 @@ def make_hists(
 ):
     # event manipulations are done via weights to the base weights
     base_weights = data[:, :, config.weight_idx]
+    # base_weights = 1.
     cut_weights = tomatos.select.cuts(pars, data, config, validate_only)
     # apply cuts
     base_weights = jnp.multiply(base_weights, cut_weights)
