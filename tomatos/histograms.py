@@ -8,6 +8,8 @@ import relaxed
 
 import tomatos.utils
 
+import logging
+
 
 # modified from relaxed and added weights, its nice to have it here to see
 # whats going on
@@ -220,8 +222,8 @@ def fill_hists(
             i=bkg_idx, weights=sel_weights["SR_btag_1"], w2=True
         )
         sigma = jnp.sqrt(h_w2_SR_btag_1)
-        hists["SR_btag_1"]["bkg"]["STAT_1UP"] = h_w2_SR_btag_1 + sigma
-        hists["SR_btag_1"]["bkg"]["STAT_1DOWN"] = h_w2_SR_btag_1 - sigma
+        hists["SR_btag_1"]["bkg"]["STAT_1UP"] = hists["SR_btag_1"]["bkg"]["NOSYS"] + sigma
+        hists["SR_btag_1"]["bkg"]["STAT_1DOWN"] = hists["SR_btag_1"]["bkg"]["NOSYS"] - sigma
 
         # for bkg estimate
         hists["CR_btag_2"]["bkg"]["NOSYS"] = compute_hist(
