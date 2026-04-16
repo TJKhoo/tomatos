@@ -41,8 +41,8 @@ def events(data, config, base_weights):
     btag_1 = data[:, :, config.vars.index("j1_tag")]
     btag_2 = data[:, :, config.vars.index("j2_tag")]
 
-    btag_1_pass = btag_1 > 1.
-    btag_2_pass = btag_2 > 1.
+    btag_1_pass = btag_1 > 2.5
+    btag_2_pass = btag_2 > 2.5
 
     Ntag_1 = btag_1_pass ^ btag_2_pass # Change to XOR
     Ntag_2 = btag_1_pass & btag_2_pass
