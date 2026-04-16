@@ -179,13 +179,15 @@ def log_sharp_hists(
         filter_return_hists=True,
     )
     logging.info("--- Nominal (Sharp hist) ---")
-    for (h_key, h), (_, sharp_h) in zip(hists.items(), sharp_hists.items()):
+    for (h_key, h) in hists.items():
         if config.nominal in h_key and not "STAT" in h_key:
+            sharp_h = sharp_hists[h_key]
             logging.info(f"{h_key.ljust(25)}: {sharp_h}")
 
     logging.info("--- Nominal (binned KDE) / (Sharp hist) ---")
-    for (h_key, h), (_, sharp_h) in zip(hists.items(), sharp_hists.items()):
+    for (h_key, h) in hists.items():
         if config.nominal in h_key and not "STAT" in h_key:
+            sharp_h = sharp_hists[h_key]
             # hist approx ratio - protect against division by zero
             metrics["h_" + h_key + "_sharp"] = sharp_h
             # Use np.where to avoid inf/nan from division by very small values
