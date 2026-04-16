@@ -19,14 +19,14 @@ import tomatos.utils
 import tomatos.workspace
 
 
-def plot_inputs(config):
+def plot_inputs(config,weighted=False):
     """
     Create individual plots for each variable and a combined grid of all plots.
 
     Args:
         config: Configuration object containing variables, file paths, and tree name.
     """
-    plot_path = config.results_path + "input_plots/"
+    plot_path = config.results_path + f"input_plots{'_weighted' if weighted else ''}/"
     if not os.path.isdir(plot_path):
         os.makedirs(plot_path)
 
@@ -40,6 +40,7 @@ def plot_inputs(config):
     fig, axes = plt.subplots(rows, cols, figsize=(cols * 5, rows * 4))
     axes = axes.flatten() if isinstance(axes, np.ndarray) else [axes]
 
+    filtered_weights = None
     for i, var in enumerate(config.vars):
         ax = axes[i]
         # Individual plot setup
@@ -47,6 +48,8 @@ def plot_inputs(config):
         for sample, path in config.sample_files_dict.items():
             tree = uproot.open(path)[config.tree_name]
             data = tree[var].array(library="np")
+            if weighted:
+                weights = tree[config.weight_name].array(library="np")
 
             # Calculate mean and standard deviation
             mean = np.mean(data)
@@ -54,21 +57,27 @@ def plot_inputs(config):
 
             # Filter data within 3 standard deviations
             filtered_data = data[(data > mean - (3 * std)) & (data < mean + (3 * std))]
+            if weighted:
+                filtered_weights = weights[(data > mean - (3 * std)) & (data < mean + (3 * std))]
 
             with np.errstate(divide="ignore", invalid="ignore"):
                 ax.hist(
                     filtered_data,
                     bins=30,
                     density=True,
+                    weights=filtered_weights,
                     histtype="step",
                     label=sample,
+                    log=True,
                 )
                 plt.hist(
                     filtered_data,
                     bins=30,
                     density=True,
+                    weights=filtered_weights,
                     histtype="step",
                     label=sample,
+                    log=True,
                 )
         ax.set_xlabel(var)
         ax.set_ylabel("Event Density")

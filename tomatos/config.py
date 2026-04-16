@@ -55,6 +55,7 @@ class Setup:
         # array[:, :nn_inputs_idx_end] much faster than array[:, np.arange(nn_inputs_idx_end)]
         # + 1 to also include the given one when slicing
         self.nn_inputs_idx_end = len(yml["vars"])
+        self.weight_name = yml["event_weight_var"]
         self.weight_idx = self.vars.index(yml["event_weight_var"])
         self.cls_var_idx = self.vars.index(yml["cls_var"])
 

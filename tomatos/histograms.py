@@ -113,7 +113,7 @@ def compute_hist_wrapper(
     # these ifs only work because of static_argnames
     if objective == "cls_var":
         sample_data = data[i, :, cls_var_idx]
-    elif objective == "cls_nn":
+    elif objective in ["cls_nn","bce"]:
         sample_data = nn_output[i, :]
 
     sample_weights = weights[i, :]
@@ -146,13 +146,13 @@ def fill_hists(
     bins = jnp.array([0, *pars["bins"], 1]) if config.include_bins else config.bins
 
     # make hists sharp if validation
-    bw = 1e-20 if validate_only else pars["bw"]
+    bw = 1e-6 if validate_only else pars["bw"]
 
     # this will hold: hists[sel][sample][sys]
     hists = {sel: {sample: {} for sample in config.samples} for sel in sel_weights}
 
     # get nn output
-    if config.objective == "cls_nn":
+    if config.objective in ["cls_nn","bce"]:
         nn_output = get_nn_output(
             pars,
             data,

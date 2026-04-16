@@ -31,6 +31,7 @@ def main():
     if config.plot_inputs:
         logging.info("Plotting Inputs...")
         tomatos.plotting.plot_inputs(config)
+        tomatos.plotting.plot_inputs(config,weighted=True)
 
     if args.prep:
         logging.info("Preprocessing...")
