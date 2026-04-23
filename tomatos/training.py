@@ -52,7 +52,7 @@ def train_init(config):
     nn_model = tomatos.nn.NeuralNetwork(n_features=config.nn_inputs_idx_end)
     if hasattr(config,"pretrain_params") and config.pretrain_params:
         print(f"Import pretrained NN params from {config.pretrain_params}")
-        eqx.tree_deserialise_leaves(config.pretrain_params, nn_model)
+        nn_model = eqx.tree_deserialise_leaves(config.pretrain_params, nn_model)
     # split model into parameters to optimize and the nn architecture
     nn_pars, nn_arch = eqx.partition(nn_model, eqx.is_array)
     config.nn_arch = nn_arch
