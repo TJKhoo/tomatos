@@ -75,6 +75,18 @@ def hist(
     return counts
 
 
+# Probably should add infinity reflection
+# @partial(jax.jit, static_argnames=["density"])
+def real_hist(
+    data: jnp.array,
+    weights: jnp.array,
+    bins: jnp.array,
+    density: bool = False,
+    ):
+
+    return jnp.histogram(data,bins=bins,weights=weights,density=density)[0]
+
+
 @partial(jax.jit, static_argnames=["nn_arch", "nn_inputs_idx_end"])
 def get_nn_output(
     pars,
@@ -98,7 +110,7 @@ def get_nn_output(
 
 
 # jitting however not of much help here
-@partial(jax.jit, static_argnames=["objective", "cls_var_idx", "w2"])
+@partial(jax.jit, static_argnames=["objective", "cls_var_idx", "w2", "real"])
 def compute_hist_wrapper(
     i,
     objective,
@@ -110,6 +122,7 @@ def compute_hist_wrapper(
     bw,
     bins,
     w2=False,
+    real=False
 ):
     # lots of args due to the pure function paradigm
     # these ifs only work because of static_argnames
@@ -123,16 +136,27 @@ def compute_hist_wrapper(
     if w2:
         sample_weights = jnp.power(sample_weights, 2)
 
-    # Scale works also as an estimate for w2
-    return (
-        hist(
-            data=sample_data,
-            weights=sample_weights,
-            bandwidth=bw,
-            bins=bins,
+    if real:
+        # Scale works also as an estimate for w2
+        return (
+            real_hist(
+                data=sample_data,
+                weights=sample_weights,
+                bins=bins,
+            )
+            * scale[i]
         )
-        * scale[i]
-    )
+    else:
+        # Scale works also as an estimate for w2
+        return (
+            hist(
+                data=sample_data,
+                weights=sample_weights,
+                bandwidth=bw,
+                bins=bins,
+            )
+            * scale[i]
+        )
 
 
 def fill_hists(
@@ -142,13 +166,14 @@ def fill_hists(
     sel_weights,
     scale,
     validate_only,
+    real=False,
 ):
     # any magic in here will at the end just call the upper hist() function
 
     bins = jnp.array([0, *pars["bins"], 1]) if config.include_bins else config.bins
 
     # make hists sharp if validation
-    bw = 1e-6 if validate_only else pars["bw"]
+    bw = 1e-20 if validate_only else pars["bw"]
 
     # this will hold: hists[sel][sample][sys]
     hists = {sel: {sample: {} for sample in config.samples} for sel in sel_weights}
@@ -173,6 +198,7 @@ def fill_hists(
         scale=scale,
         bw=bw,
         bins=bins,
+        real=real,
     )
     # calc all hists for all samples in fit region
     hists_vector = jax.vmap(

@@ -150,14 +150,18 @@ def run(config):
         tomatos.train_utils.log_kde(
             config, metrics, opt_pars, train_data, train_sf, hists, bins
         )
+        tomatos.train_utils.log_real_hists(
+            opt_pars, train_data, config, train_sf, hists
+        )
         tomatos.train_utils.log_sharp_hists(
             opt_pars, train_data, config, train_sf, hists, metrics
         )
+        tomatos.train_utils.log_cuts(config, opt_pars, metrics, infer_metrics_i)
+        tomatos.train_utils.log_bw(metrics, opt_pars)
 
-        if "cls" in config.objective:
+        if config.include_bins:
             tomatos.train_utils.log_bins(config, metrics, bins, infer_metrics_i)
-            tomatos.train_utils.log_cuts(config, opt_pars, metrics, infer_metrics_i)
-            tomatos.train_utils.log_bw(metrics, opt_pars)
+
         tomatos.train_utils.save_model(
             i,
             test_loss,

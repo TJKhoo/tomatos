@@ -195,6 +195,32 @@ def log_sharp_hists(
             logging.info(f"{h_key.ljust(25)}: {ratio}")
 
 
+def log_real_hists(
+    opt_pars,
+    train_data,
+    config,
+    train_sf,
+    hists
+    ):
+
+    # sharp evaluation train data hists
+    real_hists = tomatos.pipeline.make_hists(
+        opt_pars,
+        train_data,
+        config,
+        train_sf,
+        validate_only=True,  # sharp hists
+        filter_return_hists=True,
+        real=True,
+    )
+    logging.info("--- Nominal (Real hist) ---")
+    for (h_key, h) in hists.items():
+        if config.nominal in h_key and not "STAT" in h_key:
+            real_h = real_hists[h_key]
+            logging.info(f"{h_key.ljust(25)}: {real_h}")
+
+
+
 def do_metrics_exist(config):
     if os.path.exists(config.metrics_file_path) and not config.debug:
         user_input = input(

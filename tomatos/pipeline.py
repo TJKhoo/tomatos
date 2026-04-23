@@ -15,7 +15,7 @@ import tomatos.workspace
 
 
 def make_hists(
-    pars, data, config, scale, validate_only=False, filter_return_hists=False
+    pars, data, config, scale, validate_only=False, filter_return_hists=False, real=False,
 ):
     # event manipulations are done via weights to the base weights
     base_weights = data[:, :, config.weight_idx]
@@ -28,7 +28,7 @@ def make_hists(
 
     # fill
     hists = tomatos.histograms.fill_hists(
-        pars, data, config, sel_weights, scale, validate_only
+        pars, data, config, sel_weights, scale, validate_only, real
     )
     # calculate additional hists based on existing hists
     hists = tomatos.workspace.hist_transforms(hists, validate_only)
