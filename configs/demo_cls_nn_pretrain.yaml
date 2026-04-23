@@ -24,7 +24,7 @@ aux_vars:
   - "j2_tag"
 
 # Pre-trained model
-pretrain_params: "/Users/khoo/Work/ATLAS/Helena_Masters/tomatos_out/tomatos_bce_steps_100_bins_8_SMHH_JZ1to4_fixNtag/models/epoch_best.eqx"
+pretrain_params: "/Users/khoo/Work/ATLAS/Helena_Masters/tomatos_out/tomatos_bce_steps_250_bins_8_SMHH_JZ1to4_fixNtag/models/epoch_best.eqx"
 
 # ratio need to add up to one
 train_ratio: 0.8
@@ -45,7 +45,7 @@ include_bins: false
 # results folder suffix
 suffix: "SMHH_JZ1to4_pretrain"
 # train steps
-num_steps: 100
+num_steps: 250
 # how often to print status
 # learning rate
 lr: 0.003

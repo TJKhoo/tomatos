@@ -9,7 +9,7 @@ tree_name: AnalysisMiniTree
 signal_sample: "Signal"
 # total events that are batched in training from all sample_sys combined
 # 1e7 with 20 vars ~1.6 GB in memory
-batch_size: 134672
+batch_size: 1_000_000
 
 # the main data array is defined by (n_samples, n_events, vars)
 vars:
@@ -51,7 +51,7 @@ lr: 0.003
 # can choose from linear_cycle, constant
 lr_schedule: "linear_cycle"
 # start and minimum value for the bandwidth adaptation
-bw_init: 0.25
+bw_init: 0.2
 bw_min: 0.02
 # slope value in the sigmoid, this is pretty sharp!
 slope: 150
@@ -62,7 +62,7 @@ update_limit_cuts: 0.0005 # for min max scaled between (0,1)
 # cuts on vars to be optimized, keep variables either "above", "below"
 # or below, start somewhere where the cut actually does something to
 # find a gradient
-# NOTE: values must be min-max scaled between (0, 1), not raw values!
+# NOTE: values must be min-max scaled between (0, 1), not raw values! -- this is a lie
 opt_cuts:
   j1_pt:
     keep: "above" # or below
